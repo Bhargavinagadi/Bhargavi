@@ -1,0 +1,22 @@
+//By default, Django signals are executed synchronously. This means the sender waits for the receiver to finish before moving forward.
+//Step 1: Define the Signal (in signals.py):
+import time
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth.models import User
+
+@receiver(post_save, sender=User)
+def slow_signal(sender, instance, **kwargs):
+    print("🚨 Signal received. Starting task...")
+    time.sleep(5)  # Simulate delay
+    print("✅ Task completed.")
+
+//Step 2: Trigger the Signal (in Django shell or a view):
+from django.contrib.auth.models import User
+
+print("⏳ Before saving user...")
+User.objects.create(username="testuser")
+print("🏁 After saving user...")
+
+
+
